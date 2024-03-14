@@ -1,6 +1,12 @@
 package org.example.task1;
 
+import java.util.regex.Pattern;
+
 public class InputValidator {
+
+    private final Pattern validPathCommandPattern =
+            Pattern.compile("root((/[-_A-Za-z0-9]+)+)?(/[-._A-Za-z0-9]+)+");
+
     public CommandType validate(String command) {
 
         command = command.trim();
@@ -26,6 +32,6 @@ public class InputValidator {
     }
 
     private boolean checkForValidPathCommand(String command) {
-        return command.matches("root((/[-_A-Za-z0-9]+)+)?(/[-._A-Za-z0-9]+)+");
+        return validPathCommandPattern.matcher(command).matches();
     }
 }

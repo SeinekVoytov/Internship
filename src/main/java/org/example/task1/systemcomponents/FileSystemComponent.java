@@ -1,4 +1,4 @@
-package org.example.task1;
+package org.example.task1.systemcomponents;
 
 public interface FileSystemComponent {
     String getName();

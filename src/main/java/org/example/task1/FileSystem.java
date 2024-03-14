@@ -1,5 +1,9 @@
 package org.example.task1;
 
+import org.example.task1.systemcomponents.File;
+import org.example.task1.systemcomponents.FileSystemComponent;
+import org.example.task1.systemcomponents.Folder;
+
 import java.util.HashSet;
 import java.util.Scanner;
 
@@ -19,8 +23,7 @@ public class FileSystem {
 
             boolean quit = false;
             do {
-                String command = scanner.next();
-
+                String command = scanner.nextLine();
                 CommandType commandType = validator.validate(command);
 
                 if (commandType == CommandType.UNKNOWN) {
