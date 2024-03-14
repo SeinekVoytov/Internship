@@ -1,12 +1,13 @@
 package org.example.task1;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class Folder implements FileSystemComponent {
 
     private String name;
-    private Set<FileSystemComponent> children;
+    private final Set<FileSystemComponent> children;
 
     public Folder(String name) {
         checkName(name);
@@ -38,5 +39,26 @@ public class Folder implements FileSystemComponent {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Folder)) return false;
+        Folder folder = (Folder) o;
+        return Objects.equals(name, folder.name) && Objects.equals(children, folder.children);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, children);
+    }
+
+    @Override
+    public String toString() {
+        return "Folder{" +
+                "name='" + name + '\'' +
+                ", children=" + children +
+                '}';
     }
 }
