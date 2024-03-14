@@ -7,33 +7,33 @@ import java.util.Set;
 public class Folder implements FileSystemComponent {
 
     private String name;
-    private final Set<FileSystemComponent> children;
+    private final Set<FileSystemComponent> components;
 
     public Folder(String name) {
         checkName(name);
-        children = new HashSet<>();
+        components = new HashSet<>();
         this.name = name;
     }
 
-    public Folder(String name, Set<FileSystemComponent> children) {
+    public Folder(String name, Set<FileSystemComponent> components) {
         this.name = name;
-        this.children = children;
+        this.components = components;
     }
 
     private void checkName(String name) {
-        if (!name.matches("$[-_. A-Za-z0-9]+^")) {
+        if (!name.matches("^[-_. A-Za-z0-9]+$")) {
             throw new IllegalArgumentException("Invalid folder name specified");
         }
     }
 
     public void addNewComponent(FileSystemComponent component) {
-        children.add(component);
+        components.add(component);
     }
 
     @Override
     public void display(int indentation) {
-        System.out.println(" ".repeat(indentation) + getName());
-        for (FileSystemComponent component : children) {
+        System.out.println("\t".repeat(indentation) + getName() + "/");
+        for (FileSystemComponent component : components) {
             component.display(indentation + 1);
         }
     }
@@ -48,24 +48,28 @@ public class Folder implements FileSystemComponent {
         return name;
     }
 
+    public Set<FileSystemComponent> getComponents() {
+        return components;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Folder)) return false;
         Folder folder = (Folder) o;
-        return Objects.equals(name, folder.name) && Objects.equals(children, folder.children);
+        return Objects.equals(name, folder.name) && Objects.equals(components, folder.components);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, children);
+        return Objects.hash(name, components);
     }
 
     @Override
     public String toString() {
         return "Folder{" +
                 "name='" + name + '\'' +
-                ", children=" + children +
+                ", children=" + components +
                 '}';
     }
 }

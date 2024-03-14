@@ -8,7 +8,7 @@ public class File implements FileSystemComponent {
 
     public File(String name) {
 
-        if (!name.matches("$[-_. A-Za-z0-9]+\\.[a-z]+^")) {
+        if (!name.matches("^[-_. A-Za-z0-9]+\\.[a-z]+$")) {
             throw new IllegalArgumentException("Invalid file name specified");
         }
 
@@ -17,7 +17,7 @@ public class File implements FileSystemComponent {
 
     @Override
     public void display(int indentation) {
-        System.out.println(" ".repeat(indentation) + getName());
+        System.out.println("\t".repeat(indentation) + getName());
     }
 
     @Override
