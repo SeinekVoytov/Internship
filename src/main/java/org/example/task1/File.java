@@ -16,8 +16,8 @@ public class File implements FileSystemComponent {
     }
 
     @Override
-    public void display() {
-
+    public void display(int indentation) {
+        System.out.println(" ".repeat(indentation) + getName());
     }
 
     @Override

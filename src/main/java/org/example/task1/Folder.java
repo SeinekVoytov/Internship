@@ -26,9 +26,16 @@ public class Folder implements FileSystemComponent {
         }
     }
 
-    @Override
-    public void display() {
+    public void addNewComponent(FileSystemComponent component) {
+        children.add(component);
+    }
 
+    @Override
+    public void display(int indentation) {
+        System.out.println(" ".repeat(indentation) + getName());
+        for (FileSystemComponent component : children) {
+            component.display(indentation + 1);
+        }
     }
 
     @Override
