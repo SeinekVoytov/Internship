@@ -1,5 +1,7 @@
 package org.example.task1;
 
+import org.example.task1.command.CommandType;
+import org.example.task1.command.CommandValidator;
 import org.example.task1.systemcomponents.File;
 import org.example.task1.systemcomponents.FileSystemComponent;
 import org.example.task1.systemcomponents.Folder;
@@ -9,9 +11,12 @@ import java.util.Scanner;
 
 public class FileSystem {
 
-    private final Folder root;
+    public static final String UNKNOWN_COMMAND_MSG = "Unknown command. Available commands:\n<path>\nprint\nquit";
 
-    private final InputValidator validator = new InputValidator();
+    private final Folder root;
+    private final CommandValidator validator = new CommandValidator();
+
+    private boolean quit;
 
     public FileSystem() {
         root = new Folder("root", new HashSet<>());
@@ -21,13 +26,13 @@ public class FileSystem {
 
         try (Scanner scanner = new Scanner(System.in)) {
 
-            boolean quit = false;
+            quit = false;
             do {
                 String command = scanner.nextLine();
                 CommandType commandType = validator.validate(command);
 
                 if (commandType == CommandType.UNKNOWN) {
-                    System.err.println("Unknown command");
+                    System.out.println(UNKNOWN_COMMAND_MSG);
                 }
 
                 switch (commandType) {
@@ -42,9 +47,13 @@ public class FileSystem {
 
     private void traverseFileTree(String path) {
 
+        if (path.charAt(0) == '/') {
+            path = path.substring(1);
+        }
+
         String[] pathParts = path.split("/");
 
-        if (pathParts.length == 1) {
+        if (pathParts.length == 1) {    // /root case
             return;
         }
 
@@ -60,10 +69,6 @@ public class FileSystem {
                 continue;
             }
 
-            if (nextComponent instanceof File) {
-                break;
-            }
-
             if (isFile(pathPart)) {
                 currentFolder.addNewComponent(new File(pathPart));
                 break;
@@ -73,10 +78,6 @@ public class FileSystem {
             currentFolder.addNewComponent(newFolder);
             currentFolder = newFolder;
         }
-    }
-
-    private boolean isFile(String name) {
-        return name.matches("^.+\\.[a-z]+$");
     }
 
     private FileSystemComponent findNext(Folder folder, String targetName) {
@@ -90,7 +91,15 @@ public class FileSystem {
         return null;
     }
 
+    private boolean isFile(String name) {
+        return (name != null) && (name.matches("^.+\\.[a-z]+$"));
+    }
+
     private void displayHierarchy() {
         root.display(0);
+    }
+
+    public boolean isQuit() {
+        return quit;
     }
 }
