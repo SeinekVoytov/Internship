@@ -1,20 +1,15 @@
-package org.example.task1;
+package org.example.task1.command;
 
 import java.util.regex.Pattern;
 
-public class InputValidator {
+public class CommandValidator {
 
     private final Pattern validPathCommandPattern =
-            Pattern.compile("root((/[-_A-Za-z0-9]+)+)?(/[-._A-Za-z0-9]+)+");
+            Pattern.compile("^/?root(((/[-_A-Za-z0-9]+)+)?((/[-_A-Za-z0-9]+)+)|([-_A-Za-z0-9]+\\.[a-z]+)+)?$");
 
     public CommandType validate(String command) {
 
         command = command.trim();
-
-        if (command.isEmpty() || command.isBlank()) {
-            System.err.println("Command cannot be empty or blank");
-            return CommandType.UNKNOWN;
-        }
 
         if (command.equals("print")) {
             return CommandType.PRINT;
