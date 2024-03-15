@@ -102,6 +102,13 @@ class FileSystemTest {
         assertEquals(FileSystem.UNKNOWN_COMMAND_MSG + "\n", testOut.toString());
     }
 
+    @Test
+    public void addingAlreadyExistingFileTest() {
+        provideInput(String.format("%s\n%s\n%s", "root/file.xml", "/root/file.xml", QUIT_COMMAND));
+        initFileSystemForTest();
+        assertEquals("File already exists\n", testOut.toString());
+    }
+
     @AfterAll
     public static void placeDefaultStreamsBack() {
         System.setIn(DEFAULT_INPUT);

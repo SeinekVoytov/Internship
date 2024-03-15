@@ -28,17 +28,23 @@ public class FileSystem {
 
             quit = false;
             do {
-                String command = scanner.nextLine();
-                CommandType commandType = validator.validate(command);
 
-                if (commandType == CommandType.UNKNOWN) {
-                    System.out.println(UNKNOWN_COMMAND_MSG);
-                }
+                try {
+                    String command = scanner.nextLine();
+                    CommandType commandType = validator.validate(command);
 
-                switch (commandType) {
-                    case QUIT -> quit = true;
-                    case PRINT -> displayHierarchy();
-                    case PATH -> traverseFileTree(command);
+                    if (commandType == CommandType.UNKNOWN) {
+                        System.out.println(UNKNOWN_COMMAND_MSG);
+                    }
+
+                    switch (commandType) {
+                        case QUIT -> quit = true;
+                        case PRINT -> displayHierarchy();
+                        case PATH -> traverseFileTree(command);
+                    }
+
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
 
             } while (!quit);
@@ -69,6 +75,10 @@ public class FileSystem {
                 continue;
             }
 
+            if (nextComponent instanceof File) {
+                throw new IllegalArgumentException("File already exists");
+            }
+
             if (isFile(pathPart)) {
                 currentFolder.addNewComponent(new File(pathPart));
                 break;
@@ -92,7 +102,7 @@ public class FileSystem {
     }
 
     private boolean isFile(String name) {
-        return (name != null) && (name.matches("^.+\\.[a-z]+$"));
+        return (name.matches("^.+\\.[a-z]+$"));
     }
 
     private void displayHierarchy() {
