@@ -21,7 +21,7 @@ public class Folder implements FileSystemComponent {
     }
 
     private void checkName(String name) {
-        if (!name.matches("^[-_. A-Za-z0-9]+$")) {
+        if (!name.matches("^[-_A-Za-z0-9]+$")) {
             throw new IllegalArgumentException("Invalid folder name specified");
         }
     }

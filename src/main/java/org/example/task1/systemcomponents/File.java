@@ -8,7 +8,7 @@ public class File implements FileSystemComponent {
 
     public File(String name) {
 
-        if (!name.matches("^[-_. A-Za-z0-9]+\\.[a-z]+$")) {
+        if (!name.matches("^[-_A-Za-z0-9]+\\.[a-z]+$")) {
             throw new IllegalArgumentException("Invalid file name specified");
         }
 
