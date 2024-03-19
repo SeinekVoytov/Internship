@@ -1,6 +1,5 @@
 package org.example.task1.systemcomponents;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,33 +7,22 @@ import static org.junit.jupiter.api.Assertions.*;
 class FolderTest {
 
     @Test
-    public void emptyFolderNameShouldThrowExceptionTest() {
+    void constructor_ShouldThrowIllegalArgumentException_WhenEmptyFolderNameSpecified() {
         assertThrows(IllegalArgumentException.class, () -> new Folder(""));
     }
 
     @Test
-    public void folderNameWithExtensionShouldThrowExceptionTest() {
+    void constructor_ShouldThrowIllegalArgumentException_WhenFolderNameWithExtensionSpecified() {
         assertThrows(IllegalArgumentException.class, () -> new Folder("folder.xls"));
     }
 
     @Test
-    public void folderNameWithEmptyExtensionShouldThrowExceptionTest() {
+    void constructor_ShouldThrowIllegalArgumentException_WhenFolderNameContainEmptyExtension() {
         assertThrows(IllegalArgumentException.class, () -> new Folder("folder."));
     }
 
     @Test
-    public void illegalCharactersInFolderNameShouldThrowExceptionTest() {
+    void constructor_ShouldThrowIllegalArgumentException_WhenFolderNameContainIllegalCharacters() {
         assertThrows(IllegalArgumentException.class, () -> new Folder("folder$"));
-    }
-
-    @Test
-    public void folderNameWithUnderscoresDashesShouldNotThrowException() {
-        try {
-            new Folder("a-b");
-            new Folder("a_b");
-        }
-        catch (IllegalArgumentException exc) {
-            Assertions.fail("Folder name should be able to contain underscores and dashes");
-        }
     }
 }

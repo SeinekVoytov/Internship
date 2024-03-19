@@ -11,8 +11,6 @@ public class CommandHandler {
     private final CommandValidator validator;
     private final FileSystem ownerSystem;
 
-    private boolean quit;
-
     public CommandHandler(FileSystem owner) {
         this.ownerSystem = owner;
         validator = new CommandValidator();
@@ -22,7 +20,7 @@ public class CommandHandler {
 
         try (Scanner scanner = new Scanner(System.in)) {
 
-            quit = false;
+            boolean quit = false;
             do {
 
                 try {
@@ -46,9 +44,5 @@ public class CommandHandler {
 
             } while (!quit);
         }
-    }
-
-    public boolean isQuit() {
-        return quit;
     }
 }

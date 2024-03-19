@@ -82,8 +82,4 @@ public class FileSystem {
     private boolean isFile(String name) {
         return (name.matches("^.+\\.[a-z]+$"));
     }
-
-    public boolean isQuit() {
-        return receiver.isQuit();
-    }
 }

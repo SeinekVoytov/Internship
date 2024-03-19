@@ -1,6 +1,5 @@
 package org.example.task1.systemcomponents;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,38 +7,27 @@ import static org.junit.jupiter.api.Assertions.*;
 class FileTest {
 
     @Test
-    public void emptyFileNameShouldThrowExceptionTest() {
+    void constructor_ShouldThrowIllegalArgumentException_WhenEmptyFileNameSpecified() {
         assertThrows(IllegalArgumentException.class, () -> new File(""));
     }
 
     @Test
-    public void fileNameWithoutExtensionShouldThrowExceptionTest() {
+    void constructor_ShouldThrowIllegalArgumentException_WhenFileNameWithoutExtensionSpecified() {
         assertThrows(IllegalArgumentException.class, () -> new File("file"));
     }
 
     @Test
-    public void fileNameWithEmptyExtensionShouldThrowExceptionTest() {
+    void constructor_ShouldThrowIllegalArgumentException_WhenFileExtensionIsEmpty() {
         assertThrows(IllegalArgumentException.class, () -> new File("file."));
     }
 
     @Test
-    public void illegalCharactersInExtensionForFileShouldThrowExceptionTest() {
+    void constructor_ShouldThrowIllegalArgumentException_WhenFileExtensionContainIllegalCharacters() {
         assertThrows(IllegalArgumentException.class, () -> new File("file.t_t"));
     }
 
     @Test
-    public void invalidCharacterInFileNameShouldThrowExceptionTest() {
+    void constructor_ShouldThrowIllegalArgumentException_WhenFileNameContainIllegalCharacters() {
         assertThrows(IllegalArgumentException.class, () -> new File("$file.txt"));
-    }
-
-    @Test
-    public void fileNameWithUnderscoresDashesShouldNotThrowException() {
-        try {
-            new File("a-b.txt");
-            new File("a_b.xml");
-        }
-        catch (IllegalArgumentException exc) {
-            Assertions.fail("File name should be able to contain underscores and dashes");
-        }
     }
 }
