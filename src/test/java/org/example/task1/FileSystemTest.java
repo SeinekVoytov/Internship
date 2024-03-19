@@ -1,117 +1,60 @@
 package org.example.task1;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("unused")
 class FileSystemTest {
 
-    private static final InputStream DEFAULT_INPUT = System.in;
-    private static final PrintStream DEFAULT_OUTPUT = System.out;
+    private final FileSystem fileSystem = new FileSystem();
 
-    private static final String QUIT_COMMAND = "quit";
-    private static final String PRINT_COMMAND = "print";
-
-    private ByteArrayOutputStream testOut;
-    private FileSystem fileSystem;
-
-    @BeforeEach
-    public void setUpOutput() {
-        testOut = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(testOut));
-    }
-
-    private void provideInput(String input) {
-        ByteArrayInputStream testIn = new ByteArrayInputStream(input.getBytes());
-        System.setIn(testIn);
-    }
-
-    private void initFileSystemForTest() {
-        fileSystem = new FileSystem();
-        fileSystem.start();
+    @Test
+    void getFileTree_ShouldReturnRootDir_WhenNothingAdded() {
+        assertEquals("root/\n", fileSystem.getFileTree());
     }
 
     @Test
-    public void quitCommandTest() {
-        provideInput("quit");
-        initFileSystemForTest();
-        assertTrue(fileSystem.isQuit());
+    void getFileTree_ShouldReturnOneFilePath_WhenOneFileAdded() {
+        fileSystem.add("root/file.txt");
+        assertEquals("root/\n\tfile.txt\n", fileSystem.getFileTree());
     }
 
     @Test
-    public void printCommandWithDefaultRootDirectoryTest() {
-        provideInput(String.format("%s\n%s",PRINT_COMMAND, QUIT_COMMAND));
-        initFileSystemForTest();
-        assertEquals("root/\n", testOut.toString());
+    void getFileTree_ShouldReturnValidPath_WhenOneDirectoryAdded() {
+        fileSystem.add("root/folder");
+        assertEquals("root/\n\tfolder/\n", fileSystem.getFileTree());
     }
 
     @Test
-    public void testPathCommandWithOneFileTest() {
-        provideInput(String.format("%s\n%s\n%s", "root/file.txt", PRINT_COMMAND, QUIT_COMMAND));
-        initFileSystemForTest();
-        assertEquals("root/\n\tfile.txt\n", testOut.toString());
+    void getFileTree_ShouldReturnValidPath_WhenInnerFileAndDirectoryAdded() {
+        fileSystem.add("/root/folder/file.xml");
+        assertEquals("root/\n\tfolder/\n\t\tfile.xml\n", fileSystem.getFileTree());
     }
 
     @Test
-    public void testPathCommandWithOneFolderTest() {
-        provideInput(String.format("%s\n%s\n%s", "/root/folder", PRINT_COMMAND, QUIT_COMMAND));
-        initFileSystemForTest();
-        assertEquals("root/\n\tfolder/\n", testOut.toString());
+    void getFileTree_ShouldReturnValidPath_WhenTwoInnerDirectoriesAdded() {
+        fileSystem.add("root/folder1");
+        fileSystem.add("/root/folder2");
+        assertEquals("root/\n\tfolder1/\n\tfolder2/\n", fileSystem.getFileTree());
     }
 
     @Test
-    public void twoNestedDirectoriesTest() {
-        provideInput(String.format("%s\n%s\n%s", "root/folder1/folder2", PRINT_COMMAND, QUIT_COMMAND));
-        initFileSystemForTest();
-        assertEquals("root/\n\tfolder1/\n\t\tfolder2/\n", testOut.toString());
+    void getFileTree_ShouldReturnValidPath_WhenTwoInnerFilesAdded() {
+        fileSystem.add("root/file1.txt");
+        fileSystem.add("/root/file2.xml");
+        assertEquals("root/\n\tfile1.txt\n\tfile2.xml\n", fileSystem.getFileTree());
     }
 
     @Test
-    public void directoryWithFileAndFolderTest() {
-        provideInput(String.format("%s\n%s\n%s\n%s", "/root/folder", "root/file.txt", PRINT_COMMAND, QUIT_COMMAND));
-        initFileSystemForTest();
-        assertEquals("root/\n\tfolder/\n\tfile.txt\n", testOut.toString());
+    void getFileTree_ShouldReturnRootDir_WhenExistedFolderAdded() {
+        fileSystem.add("/root");
+        assertEquals("root/\n", fileSystem.getFileTree());
     }
 
     @Test
-    public void invalidPathCommandTest() {
-        provideInput(String.format("%s\n%s", "root/file.", QUIT_COMMAND));
-        initFileSystemForTest();
-        assertEquals(FileSystem.UNKNOWN_COMMAND_MSG + "\n", testOut.toString());
-    }
-
-    @Test
-    public void invalidPrintCommandTest() {
-        provideInput(String.format("%s\n%s", "Print", QUIT_COMMAND));
-        initFileSystemForTest();
-        assertEquals(FileSystem.UNKNOWN_COMMAND_MSG + "\n", testOut.toString());
-    }
-
-    @Test
-    public void invalidQuitCommandTest() {
-        provideInput(String.format("%s\n%s", "Quit", QUIT_COMMAND));
-        initFileSystemForTest();
-        assertEquals(FileSystem.UNKNOWN_COMMAND_MSG + "\n", testOut.toString());
-    }
-
-    @Test
-    public void addingAlreadyExistingFileTest() {
-        provideInput(String.format("%s\n%s\n%s", "root/file.xml", "/root/file.xml", QUIT_COMMAND));
-        initFileSystemForTest();
-        assertEquals("File already exists\n", testOut.toString());
-    }
-
-    @AfterAll
-    public static void placeDefaultStreamsBack() {
-        System.setIn(DEFAULT_INPUT);
-        System.setOut(DEFAULT_OUTPUT);
+    void add_ShouldTrowIllegalArgumentException_WhenFileAlreadyExist() {
+        fileSystem.add("/root/file.iml");
+        assertThrows(IllegalArgumentException.class, () -> fileSystem.add("/root/file.iml"));
     }
 }

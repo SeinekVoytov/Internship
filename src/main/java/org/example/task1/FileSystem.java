@@ -1,54 +1,32 @@
 package org.example.task1;
 
-import org.example.task1.command.CommandType;
-import org.example.task1.command.CommandValidator;
+import org.example.task1.command.CommandHandler;
 import org.example.task1.systemcomponents.File;
 import org.example.task1.systemcomponents.FileSystemComponent;
 import org.example.task1.systemcomponents.Folder;
 
 import java.util.HashSet;
-import java.util.Scanner;
 
 public class FileSystem {
 
-    public static final String UNKNOWN_COMMAND_MSG = "Unknown command. Available commands:\n<path>\nprint\nquit";
-
     private final Folder root;
-    private final CommandValidator validator = new CommandValidator();
-
-    private boolean quit;
+    private final CommandHandler receiver;
 
     public FileSystem() {
         root = new Folder("root", new HashSet<>());
+        receiver = new CommandHandler(this);
     }
 
     public void start() {
+        receiver.start();
+    }
 
-        try (Scanner scanner = new Scanner(System.in)) {
+    public void add(String path) {
+        traverseFileTree(path);
+    }
 
-            quit = false;
-            do {
-
-                try {
-                    String command = scanner.nextLine();
-                    CommandType commandType = validator.validate(command);
-
-                    if (commandType == CommandType.UNKNOWN) {
-                        System.out.println(UNKNOWN_COMMAND_MSG);
-                    }
-
-                    switch (commandType) {
-                        case QUIT -> quit = true;
-                        case PRINT -> displayHierarchy();
-                        case PATH -> traverseFileTree(command);
-                    }
-
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-
-            } while (!quit);
-        }
+    public String getFileTree() {
+        return root.toFileTreeString(0);
     }
 
     private void traverseFileTree(String path) {
@@ -80,12 +58,12 @@ public class FileSystem {
             }
 
             if (isFile(pathPart)) {
-                currentFolder.addNewComponent(new File(pathPart));
+                currentFolder.add(new File(pathPart));
                 break;
             }
 
             Folder newFolder = new Folder(pathPart);
-            currentFolder.addNewComponent(newFolder);
+            currentFolder.add(newFolder);
             currentFolder = newFolder;
         }
     }
@@ -103,13 +81,5 @@ public class FileSystem {
 
     private boolean isFile(String name) {
         return (name.matches("^.+\\.[a-z]+$"));
-    }
-
-    private void displayHierarchy() {
-        root.display(0);
-    }
-
-    public boolean isQuit() {
-        return quit;
     }
 }

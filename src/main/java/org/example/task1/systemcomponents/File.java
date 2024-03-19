@@ -16,8 +16,8 @@ public class File implements FileSystemComponent {
     }
 
     @Override
-    public void display(int indentation) {
-        System.out.println("\t".repeat(indentation) + getName());
+    public String toFileTreeString(int indentation) {
+        return "\t".repeat(indentation) + getName() + "\n";
     }
 
     @Override
@@ -33,8 +33,7 @@ public class File implements FileSystemComponent {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof File)) return false;
-        File file = (File) o;
+        if (!(o instanceof File file)) return false;
         return Objects.equals(name, file.name);
     }
 
