@@ -10,20 +10,15 @@ public class CommandValidator {
     public CommandType validate(String command) {
 
         command = command.trim();
+        CommandType type;
 
-        if (command.equals("print")) {
-            return CommandType.PRINT;
+        switch (command) {
+            case "print" -> type = CommandType.PRINT;
+            case "quit" -> type = CommandType.QUIT;
+            default -> type = (checkForValidPathCommand(command) ? CommandType.PATH : CommandType.UNKNOWN);
         }
 
-        if (command.equals("quit")) {
-            return CommandType.QUIT;
-        }
-
-        if (checkForValidPathCommand(command)) {
-            return CommandType.PATH;
-        }
-
-        return CommandType.UNKNOWN;
+        return type;
     }
 
     private boolean checkForValidPathCommand(String command) {
