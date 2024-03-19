@@ -26,16 +26,20 @@ public class Folder implements FileSystemComponent {
         }
     }
 
-    public void addNewComponent(FileSystemComponent component) {
+    public void add(FileSystemComponent component) {
         components.add(component);
     }
 
     @Override
-    public void display(int indentation) {
-        System.out.println("\t".repeat(indentation) + getName() + "/");
+    public String toFileTreeString(int indentation) {
+
+        StringBuilder builder = new StringBuilder("\t".repeat(indentation));
+        builder.append(getName()).append("/\n");
         for (FileSystemComponent component : components) {
-            component.display(indentation + 1);
+            builder.append(component.toFileTreeString(indentation + 1));
         }
+
+        return builder.toString();
     }
 
     @Override
@@ -55,8 +59,7 @@ public class Folder implements FileSystemComponent {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Folder)) return false;
-        Folder folder = (Folder) o;
+        if (!(o instanceof Folder folder)) return false;
         return Objects.equals(name, folder.name) && Objects.equals(components, folder.components);
     }
 
