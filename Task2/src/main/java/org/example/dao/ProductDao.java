@@ -21,12 +21,12 @@ public class ProductDao implements Dao<Product> {
 
     @Override
     public List<Product> getAll() {
-        return jdbcTemplate.query("SELECT * FROM PUBLIC.PRODUCT", new BeanPropertyRowMapper<>(Product.class));
+        return jdbcTemplate.query("SELECT * FROM Product", new BeanPropertyRowMapper<>(Product.class));
     }
 
     @Override
     public Optional<Product> getById(int id) {
-        return jdbcTemplate.query("SELECT * FROM PUBLIC.PRODUCT WHERE id = ?",
+        return jdbcTemplate.query("SELECT * FROM Product WHERE id = ?",
                 new BeanPropertyRowMapper<>(Product.class), id).stream().findAny();
     }
 }

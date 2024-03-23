@@ -1,6 +1,7 @@
 package org.example.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -8,12 +9,14 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import javax.sql.DataSource;
 
 @Configuration
 @ComponentScan("org.example")
-@PropertySource("classpath:database.properties")
+@PropertySource("classpath:datasource.properties")
 public class SpringConfig {
 
     private final Environment env;
@@ -25,14 +28,11 @@ public class SpringConfig {
 
     @Bean
     public DataSource dataSource() {
-
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getRequiredProperty("driver"));
-        dataSource.setUrl(env.getRequiredProperty("url"));
-        dataSource.setUsername(env.getRequiredProperty("username"));
-        dataSource.setPassword(env.getRequiredProperty("password"));
-
-        return dataSource;
+        return new EmbeddedDatabaseBuilder()
+                .setType(EmbeddedDatabaseType.H2)
+                .setName(env.getRequiredProperty("database_name"))
+                .addScript(env.getRequiredProperty("script"))
+                .build();
     }
 
     @Bean
