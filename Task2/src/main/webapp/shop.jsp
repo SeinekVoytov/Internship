@@ -39,7 +39,7 @@
         <input type="submit" value="Submit">
     </form>
 
-    <script src="checkbox.js"></script>
+    <script src="scripts/checkbox.js"></script>
 
 </body>
 </html>
