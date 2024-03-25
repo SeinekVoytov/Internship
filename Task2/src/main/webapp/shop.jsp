@@ -11,18 +11,6 @@
 <html>
 <head>
     <title>Order</title>
-    <script>
-        function toggleRequiredCheckboxes() {
-            const requiredCheckboxes = $('.browsers :checkbox[aria-required]');
-            requiredCheckboxes.change(function(){
-                if(requiredCheckboxes.is(':checked')) {
-                    requiredCheckboxes.removeAttr('required');
-                } else {
-                    requiredCheckboxes.attr('required', 'required');
-                }
-            });
-        }
-    </script>
 </head>
 <body>
 <h2>Hello <%= request.getParameter("name")%>!</h2>
@@ -36,15 +24,18 @@
     %>
 
     <p>Make your order</p>
-    <form action="check.jsp" method="post">
+    <form id="productsForm" action="check.jsp" method="post">
         <c:forEach items="${products}" var="product">
-            <input type="checkbox" id="product_${product.id}" name="selectedProducts" value="${product.id}" aria-required="true" onchange="toggleRequiredCheckboxes()">
-            <label for="product_${product.id}" id="quantity_${product.id}">${product.name}</label>
+            <input type="checkbox" id="product_${product.id}" name="selectedProducts" value="${product.id}">
+            <label for="product_${product.id}" id="quantity_${product.id}">${product.name}, ${product.price}$</label>
             <br>
         </c:forEach>
 
         <br>
         <input type="submit" value="Submit">
     </form>
+
+    <script src="checkbox.js"></script>
+
 </body>
 </html>
