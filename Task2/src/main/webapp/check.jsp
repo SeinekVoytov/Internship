@@ -24,9 +24,8 @@
                 .map(Integer::parseInt)
                 .toList();
 
-        ApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
+        ApplicationContext context = (ApplicationContext) session.getAttribute("context");
         Dao<Product> dao = (ProductDao) context.getBean("productDao");
-        request.setAttribute("products", dao.getAll());
 
         List<Product> products = dao.getAll().stream()
                 .filter(product -> ids.contains(product.getId()))

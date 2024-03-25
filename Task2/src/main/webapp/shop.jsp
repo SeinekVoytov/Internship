@@ -18,7 +18,11 @@
     <%
         session.setAttribute("name", request.getParameter("name"));
 
-        ApplicationContext context = new AnnotationConfigApplicationContext(SpringConfig.class);
+        if (session.getAttribute("context") == null) {
+            session.setAttribute("context", new AnnotationConfigApplicationContext(SpringConfig.class));
+        }
+
+        ApplicationContext context = (ApplicationContext) session.getAttribute("context");
         Dao<Product> dao = (ProductDao) context.getBean("productDao");
         request.setAttribute("products", dao.getAll());
     %>
